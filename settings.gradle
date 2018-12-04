@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':library_annotation', ':library_processors', ':library_lib'

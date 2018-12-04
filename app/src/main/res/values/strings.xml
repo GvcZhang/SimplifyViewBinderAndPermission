@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ViewBinderAndPermission</string>
+    <string name="app_title">Here is a title</string>
+    <string name="something">Something.</string>
 </resources>
