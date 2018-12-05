@@ -70,6 +70,7 @@ public class VBP {
         private String rationaleTitle;
         private String rationaleMessage;
         private String neverAskReason;
+        private String neverAskTitle;
 
         public Builder(Context context) {
             this.context = context;
@@ -92,8 +93,9 @@ public class VBP {
             return this;
         }
 
-        public Builder withNeverAskReason(String reason) {
+        public Builder withNeverAskReason(String title,String reason) {
             this.neverAskReason = reason;
+            this.neverAskTitle = title;
             return this;
         }
 

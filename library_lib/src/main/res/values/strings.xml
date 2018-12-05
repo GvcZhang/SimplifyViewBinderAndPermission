@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">library_lib</string>
-    <string name="vbp_ask_reason">You have set permission $%s never ask again, so you have to grant it from app permission Settings. </string>
+    <string name="vbp_ask_reason">You have set permission %1$s never ask again, so you have to grant it from app permission Settings. </string>
 </resources>
