@@ -8,13 +8,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
 import com.curious.vbp.annotation.RuntimeVBP;
 import com.curious.vbp.annotation.permission.NeedsPermission;
 import com.curious.vbp.annotation.viewbinder.BindView;
 import com.curious.vbp.annotation.viewbinder.OnClick;
 import com.curious.vbp.lib.VBP;
 
-@RuntimeVBP
+import java.util.List;
+
 public class TestActivity extends AppCompatActivity {
 
     @BindView(R.id.button)
@@ -39,18 +41,30 @@ public class TestActivity extends AppCompatActivity {
         VBP.unbind(this);
     }
 
-    @OnClick({R.id.button, R.id.button2})
+    @OnClick({R.id.button, R.id.button2, R.id.button3})
     public void doOnClick(View view) {
-        System.out.println("!11" + mTV1.getText().toString());
-    }
+        switch (view.getId()) {
+            //camera permission
+            case R.id.button:
+                VBP.with(this)
+                        .withPermission(Manifest.permission.CAMERA)
+                        .withNeverAskReason("never reason")
+                        .withListener(new VBP.PermissionListener() {
+                            @Override
+                            public void onGrant() {
+                                System.out.println("grant===all");
+                            }
 
-    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO})
-    public void showCamera() {
-        //do something
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+                            @Override
+                            public void onDenied(List<String> deniedPermissions) {
+                                System.out.println("denied===" + deniedPermissions);
+                            }
+                        }).check();
+                break;
+            case R.id.button2:
+                break;
+            case R.id.button3:
+                break;
+        }
     }
 }
