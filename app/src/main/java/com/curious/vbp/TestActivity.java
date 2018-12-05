@@ -31,12 +31,6 @@ public class TestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_test);
         VBP.bind(this);
 
-        mBtn1 = getTest();
-    }
-
-
-    public <T> T getTest(){
-        return null;
     }
 
     @Override
@@ -47,7 +41,7 @@ public class TestActivity extends AppCompatActivity {
 
     @OnClick({R.id.button, R.id.button2})
     public void doOnClick(View view) {
-        System.out.println("!11"+((Button)view).getText().toString());
+        System.out.println("!11" + mTV1.getText().toString());
     }
 
     @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO})

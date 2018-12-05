@@ -75,25 +75,25 @@ public class VbpProcessor extends AbstractProcessor {
                 int resId = element.getAnnotation(BindView.class).value();
                 System.out.println("=====" + name + "===" +resId+"==="+elementUtills.getPackageOf(element).getQualifiedName());
 
-                System.out.println(TypeName.get((Type) element).toString());
+              //  System.out.println(TypeName.get((Type) element).toString());
 
 
 
-//                TypeElement enclosingType = (TypeElement) element.getEnclosingElement();
-//                BindingClass bindingClass = targetClassMap.get(enclosingType);
-//                if (bindingClass == null) {
-//                    String targetType = enclosingType.getQualifiedName().toString();
-//                    String classPackage = elementUtills.getPackageOf(enclosingType).getQualifiedName().toString();
-//                    int packageLen = classPackage.length() + 1;
-//                    String className = targetType.substring(packageLen).replace('.', '$') + BINDING_CLASS_SUFFIX;
-//                    String classFqcn = classPackage + "." + className;
-//                    bindingClass = new BindingClass(classPackage, className, targetType, classFqcn);
-//                }
-//
-//                bindingClass.addBindViewBinding(new BindViewResourceBinding(resId, name));
-//
-//                targetClassMap.put(enclosingType, bindingClass);
-//                erasedTargetNames.add(enclosingType);
+                TypeElement enclosingType = (TypeElement) element.getEnclosingElement();
+                BindingClass bindingClass = targetClassMap.get(enclosingType);
+                if (bindingClass == null) {
+                    String targetType = enclosingType.getQualifiedName().toString();
+                    String classPackage = elementUtills.getPackageOf(enclosingType).getQualifiedName().toString();
+                    int packageLen = classPackage.length() + 1;
+                    String className = targetType.substring(packageLen).replace('.', '$') + BINDING_CLASS_SUFFIX;
+                    String classFqcn = classPackage + "." + className;
+                    bindingClass = new BindingClass(classPackage, className, targetType, classFqcn);
+                }
+
+                bindingClass.addBindViewBinding(new BindViewResourceBinding(resId, name,""));
+
+                targetClassMap.put(enclosingType, bindingClass);
+                erasedTargetNames.add(enclosingType);
             }
         }
 

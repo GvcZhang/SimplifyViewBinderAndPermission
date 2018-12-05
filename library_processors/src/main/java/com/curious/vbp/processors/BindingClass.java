@@ -82,7 +82,7 @@ public class BindingClass {
 
             //bind view
             for (BindViewResourceBinding binding : bindViewBindings) {
-                result.addStatement("target.$L = ($T)(finder.findView(target, $L))", binding.getName(), binding.getResId());
+                result.addStatement("target.$L = finder.castFindView(target, $L)", binding.getName(), binding.getResId());
             }
         }
 

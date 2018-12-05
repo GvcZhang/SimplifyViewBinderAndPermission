@@ -3,7 +3,6 @@ package com.curious.vbp.processors;
 public final class BindViewResourceBinding {
     private final int resId;
     private final String name;
-    //强制类型转换的类型
     private final String type;
 
     public BindViewResourceBinding(int resId, String name, String type) {
