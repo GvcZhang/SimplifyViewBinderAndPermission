@@ -36,7 +36,7 @@ public class VbpPermissionActivity extends Activity {
     private AlertDialog mDialog;
 
     private ArrayList<String> permissions;
-    //private ArrayList<String> rationalePermissions = new ArrayList<>();
+    private ArrayList<String> rationalePermissions = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,20 +55,22 @@ public class VbpPermissionActivity extends Activity {
 
     private void handleRationale() {
         for (String permission : permissions) {
-            if (shouldShowRequestPermissionRationale(permission)
-                    && !TextUtils.isEmpty(rationaleMessage)) {
-                mDialog = new AlertDialog.Builder(this)
-                        .setCancelable(false)
-                        .setTitle(rationaleTitle)
-                        .setMessage(rationaleMessage)
-                        .setPositiveButton(android.R.string.ok, (dialog, which) -> {
-                            dialog.dismiss();
-                            requestPermissions();
-                        })
-                        .create();
-                mDialog.show();
-                return;
+            if (shouldShowRequestPermissionRationale(permission)) {
+                rationalePermissions.add(permission);
             }
+        }
+        if (!rationalePermissions.isEmpty() && !TextUtils.isEmpty(rationaleMessage)) {
+            mDialog = new AlertDialog.Builder(this)
+                    .setCancelable(false)
+                    .setTitle(rationaleTitle)
+                    .setMessage(rationaleMessage)
+                    .setPositiveButton(android.R.string.ok, (dialog, which) -> {
+                        dialog.dismiss();
+                        requestPermissions();
+                    })
+                    .create();
+            mDialog.show();
+            return;
         }
         requestPermissions();
     }
@@ -123,8 +125,10 @@ public class VbpPermissionActivity extends Activity {
 
         if (requestCode == REQUEST_PERMISSION) {
             int index = 0;
-            ArrayList<String> result = new ArrayList<>();
+            ArrayList<String> deniedResult = new ArrayList<>();
             ArrayList<String> neverAskList = new ArrayList<>();
+            ArrayList<String> justNeverAskList = new ArrayList<>();
+
             boolean allGrant = true;
             for (String permission : permissions) {
                 if (grantResults[index] == PackageManager.PERMISSION_DENIED) {
@@ -138,19 +142,26 @@ public class VbpPermissionActivity extends Activity {
                     boolean isTip = shouldShowRequestPermissionRationale(permission);
                     if (!isTip) {
                         neverAskList.add(permission);
+                        if (rationalePermissions.contains(permission)) {
+                            justNeverAskList.add(permission);
+                        }
                         continue;
                     }
-                    result.add(permission);
+                    deniedResult.add(permission);
                 }
                 index++;
             }
             if (allGrant) {
                 grant();
             } else {
-                if (!neverAskList.isEmpty()) {//TODO bug: first request and select never ask, we should not show 'go to settings' page, we just denied
-                    goToSettings(neverAskList, result);
+                if (!deniedResult.isEmpty()) {
+                    deniedResult.addAll(neverAskList);
+                    denied(deniedResult);
+                } else if (!justNeverAskList.isEmpty()) {
+                    deniedResult.addAll(neverAskList);
+                    denied(deniedResult);
                 } else {
-                    denied(result);
+                    goToSettings(neverAskList, deniedResult);
                 }
             }
         }
@@ -160,7 +171,6 @@ public class VbpPermissionActivity extends Activity {
         if (permissionListener != null) {
             permissionListener.onGrant();
         }
-        permissionListener = null;
         finish();
     }
 
@@ -168,7 +178,6 @@ public class VbpPermissionActivity extends Activity {
         if (permissionListener != null) {
             permissionListener.onDenied(permissions);
         }
-        permissionListener = null;
         finish();
     }
 
@@ -178,5 +187,6 @@ public class VbpPermissionActivity extends Activity {
         if (mDialog != null && mDialog.isShowing()) {
             mDialog.dismiss();
         }
+        permissionListener = null;
     }
 }
